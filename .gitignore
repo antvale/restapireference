@@ -1,0 +1,11 @@
+# comment is ignored
+# exclude i files with extension
+*.classpath
+*.factorypath
+*.project
+*.iml
+# exclude folders
+.idea/
+.settings/
+.vscode/
+target/
