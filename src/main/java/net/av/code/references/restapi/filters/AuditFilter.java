@@ -4,6 +4,8 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.av.code.references.restapi.context.ContextParameterConstants;
+import net.av.code.references.restapi.context.ContextParameters;
 import net.av.code.references.restapi.filters.wrappers.AuditHttpServletRequestWrapper;
 import net.av.code.references.restapi.filters.wrappers.AuditHttpServletResponseWrapper;
 
@@ -12,6 +14,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.net.ContentHandler;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -87,6 +90,10 @@ public class AuditFilter implements Filter {
         String content="";
 
         try {
+            //extract user and tenant
+            ContextParameters.setUser("avalentino");
+            ContextParameters.setTenant("World");
+            ContextParameters.setValue(ContextParameterConstants.CONTEXT_KEY_HTTPMETHOD,requestWrapper.getMethod());
             //log.info("Request: {}",requestWrapper.getContent());
             content=requestWrapper.getContent();
             chain.doFilter(requestWrapper, responseWrapper);
@@ -95,6 +102,16 @@ public class AuditFilter implements Filter {
             /*
                Save in this block the audit trails. Be careful to manage request and response
              */
+
+            log.info("Get values from context user:{}, tenant:{}, httpMethod:{}, customer:{}",
+                    ContextParameters.getUser(),
+                    ContextParameters.getTenant(),
+                    ContextParameters.getValue(ContextParameterConstants.CONTEXT_KEY_HTTPMETHOD),
+                    ContextParameters.getValue(ContextParameterConstants.CONTEXT_KEY_CUSTOMERNAME));
+            log.info(ContextParameters.toJson());
+
+            ContextParameters.remove();
+            log.info(ContextParameters.toJson());
 
           log.info("Request: {}",content);
           log.info("Response: {}",responseWrapper.getContent());
