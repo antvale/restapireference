@@ -1,0 +1,6 @@
+extractors:
+  - id: 'net.av.Filter.chain'
+    className: 'net.av.code.references.restapi.extractor.impl.DefaultAuditParametersExtractor'
+    scope: 'Filter'
+    phase: 'HTTPParameters'
+
